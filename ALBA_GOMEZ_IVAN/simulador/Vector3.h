@@ -8,7 +8,7 @@ namespace Asedio
     class Vector3
     {
     public:
-	    float x, y, z;
+	    float x, y, z;		// EN NUESTRAS PRÁCTICAS, LA VARIABLE Z SUPONEMOS QUE ES SIEMPRE 0
 
     public:
 	    //default constructor
