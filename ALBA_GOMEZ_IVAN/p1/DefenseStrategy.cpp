@@ -21,6 +21,11 @@ using namespace Asedio;
 
 // COGER DEL CAPUS (PREGUNTAS FRECUENTES) LA FUNCIÓN QUE DADA UNA CELDA DEVUELVE LA POSICIÓN SU CENTRO Y PEGARLA AQUÍ.
 
+// Devuelve la posición en el mapa del centro de la celda (i,j)
+Vector3 cellCenterToPosition(int i, int j, float cellWidth, float cellHeight) {
+    return Vector3((j * cellWidth) + cellWidth * 0.5f, (i * cellHeight) + cellHeight * 0.5f, 0);
+}
+
 float cellValue(int row, int col, bool** freeCells, int nCellsWidth, int nCellsHeight
 	, float mapWidth, float mapHeight, List<Object*> obstacles, List<Defense*> defenses) {
 	return 0; // implemente aqui la funci�n que asigna valores a las celdas     PRIMERA DEFENSA
@@ -36,8 +41,26 @@ float cellValueRest(int row, int col, bool** freeCells, int nCellsWidth, int nCe
     // COMPROBAR SI SE SALE DEL MAPA
     // VECTOR3 POSICION_CENTRAL = CELLCENTERTOPOSITION(ROW, COL)
     // RADIO_DEFENSA = DEFENSA->RADIO
-    // SI(POSICION_CENTRAL.X + RADIO_DEFENSA > MAPWIDTH || POSICION_CENTRAL.X - RADIO_DEFENSA < 0 || LO MISMO POR ARRIBA || LO MISMO POR ABAJO)
+    // EL SIGUIENTE SI() ES PARA COMPROBAR QUE LA DEFENSA NO SE SALE DEL MAPA:
+    // SI(POSICION_CENTRAL.X + RADIO_DEFENSA > MAPWIDTH || POSICION_CENTRAL.X - RADIO_DEFENSA < 0 || LO MISMO POR ARRIBA || LO MISMO POR ABAJO) {
+        // FACTIBLE = FALSO
+    // }
+    // COMPROBAR QUE NO CHOQUE CON NINGUN OBSTACULO
+    // RETURN FACTIBLE
 // }
+
+bool factibility(Defense* defense, int row, int col, std::list<Object*> obstacles, std::list<Defense*> defenses, int cellWidth, int cellHeight, float mapWidth, float mapHeight) {
+    bool factible = true;
+    Vector3 centralPosition = cellCenterToPosition(row, col, cellWidth, cellHeight);
+    float defenseRadio = defense->radio;
+    if(centralPosition.x + defenseRadio > mapWidth || centralPosition.x - defenseRadio < 0 || centralPosition.y + defenseRadio > mapHeight || centralPosition.y - defenseRadio < 0) {
+        factible = false;
+    } else {
+
+    }
+
+    return false;
+}
 
 void DEF_LIB_EXPORTED placeDefenses(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
               , std::list<Object*> obstacles, std::list<Defense*> defenses) {
