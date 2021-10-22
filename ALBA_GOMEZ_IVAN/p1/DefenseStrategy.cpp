@@ -26,14 +26,26 @@ Vector3 cellCenterToPosition(int i, int j, float cellWidth, float cellHeight) {
     return Vector3((j * cellWidth) + cellWidth * 0.5f, (i * cellHeight) + cellHeight * 0.5f, 0);
 }
 
+// Asigna valores a las celdas para colocar la primera defensa
 float cellValue(int row, int col, bool** freeCells, int nCellsWidth, int nCellsHeight
 	, float mapWidth, float mapHeight, List<Object*> obstacles, List<Defense*> defenses) {
-	return 0; // implemente aqui la funci�n que asigna valores a las celdas     PRIMERA DEFENSA
+    float cellWidth = mapWidth / nCellsWidth;
+    float cellHeight = mapHeight / nCellsHeight;
+    float totalDistance = 0;
+    List<Object*>::iterator itObstacle = obstacles.begin();
+    while(itObstacle != obstacles.end()) {
+        totalDistance += _distance(cellCenterToPosition(row, col, cellWidth, cellHeight), (*itObstacle)->position);
+    }
+	return totalDistance;
 }
 
+// Asigna valores a las celdas para colocar el resto de defensas
 float cellValueRest(int row, int col, bool** freeCells, int nCellsWidth, int nCellsHeight
 	, float mapWidth, float mapHeight, List<Object*> obstacles, List<Defense*> defenses) {
-	return 0; // implemente aqui la funci�n que asigna valores a las celdas     RESTO DE DEFENSAS (RODEANDO A LA PRIMERA DEFENSA)
+    float cellWidth = mapWidth / nCellsWidth;
+    float cellHeight = mapHeight / nCellsHeight;
+    List<Defense*>::iterator itDefense = defenses.begin();  // El primer elemento de la lista de defensas es el centro de extracción
+	return _distance(cellCenterToPosition(row, col, cellWidth, cellHeight), (*itDefense)->position);
 }
 
 // CREAR AQUÍ LA FUNCIÓN DE FACTIBILIDAD
@@ -54,19 +66,20 @@ bool factibility(Defense* defense, int row, int col, std::list<Object*> obstacle
     Vector3 centralPosition = cellCenterToPosition(row, col, cellWidth, cellHeight);
     float defenseRadio = defense->radio;
     // Comprobamos que la defensa no se sale del mapa
-    if(centralPosition.x + defenseRadio > mapWidth || centralPosition.x - defenseRadio < 0 || centralPosition.y + defenseRadio > mapHeight || centralPosition.y - defenseRadio < 0) {
+    if(centralPosition.x + defenseRadio > mapWidth || centralPosition.x - defenseRadio < 0 || 
+        centralPosition.y + defenseRadio > mapHeight || centralPosition.y - defenseRadio < 0) {
         factible = false;
     } else {
         // Comprobamos que la defensa no choca con nunguna defensa ya colocada
         List<Defense*>::iterator itDefense = defenses.begin();
-        while(itDefense != defenses.end()) {
+        while(itDefense != defenses.end() && factible) {
             if(defense->radio + (*itDefense)->radio > _distance(defense->position, (*itDefense)->position)) {
                 factible = false;
             }
         }
         // Comprobamos que la defensa no choca con ningún obstáculo
         List<Object*>::iterator itObstacle = obstacles.begin();
-        while(itObstacle != obstacles.end()) {
+        while(itObstacle != obstacles.end() && factible) {
             if(defense->radio + (*itObstacle)->radio > _distance(defense->position, (*itObstacle)->position)) {
                 factible = false;
             }
