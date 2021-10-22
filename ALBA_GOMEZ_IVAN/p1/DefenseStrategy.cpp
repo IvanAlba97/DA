@@ -53,10 +53,23 @@ bool factibility(Defense* defense, int row, int col, std::list<Object*> obstacle
     bool factible = true;
     Vector3 centralPosition = cellCenterToPosition(row, col, cellWidth, cellHeight);
     float defenseRadio = defense->radio;
+    // Comprobamos que la defensa no se sale del mapa
     if(centralPosition.x + defenseRadio > mapWidth || centralPosition.x - defenseRadio < 0 || centralPosition.y + defenseRadio > mapHeight || centralPosition.y - defenseRadio < 0) {
         factible = false;
     } else {
-
+        // Comprobamos que la defensa no choca con nunguna defensa ya colocada
+        List<Defense*>::iterator itDefense = defenses.begin();
+        while(itDefense != defenses.end()) {
+            if(defense->radio + (*itDefense)->radio > _distance(defense->position, (*itDefense)->position)) {
+                factible = false;
+            }
+        }
+        // Comprobamos que la defensa no choca con ningún obstáculo
+        List<Object*>::iterator itObstacle = obstacles.begin();
+        while(itObstacle != obstacles.end()) {
+        if(defense->radio + (*itObstacle)->radio > _distance(defense->position, (*itObstacle)->position)) {
+            factible = false;
+        }
     }
 
     return false;
