@@ -67,8 +67,9 @@ bool factibility(Defense* defense, int row, int col, std::list<Object*> obstacle
         // Comprobamos que la defensa no choca con ningún obstáculo
         List<Object*>::iterator itObstacle = obstacles.begin();
         while(itObstacle != obstacles.end()) {
-        if(defense->radio + (*itObstacle)->radio > _distance(defense->position, (*itObstacle)->position)) {
-            factible = false;
+            if(defense->radio + (*itObstacle)->radio > _distance(defense->position, (*itObstacle)->position)) {
+                factible = false;
+            }
         }
     }
 
