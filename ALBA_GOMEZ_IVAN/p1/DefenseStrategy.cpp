@@ -76,6 +76,7 @@ bool factibility(Defense* defense, int row, int col, std::list<Object*> obstacle
             if(defense->radio + (*itDefense)->radio > _distance(defense->position, (*itDefense)->position)) {
                 factible = false;
             }
+            itDefense++;
         }
         // Comprobamos que la defensa no choca con ningún obstáculo
         List<Object*>::iterator itObstacle = obstacles.begin();
@@ -83,15 +84,67 @@ bool factibility(Defense* defense, int row, int col, std::list<Object*> obstacle
             if(defense->radio + (*itObstacle)->radio > _distance(defense->position, (*itObstacle)->position)) {
                 factible = false;
             }
+            itObstacle++;
         }
     }
 
-    return false;
+    return factible;
 }
+
+class Cell {    // Usado en placeDefenses()
+    public:
+        Cell(int row, int col, float value) : row_(row), col_(col), value_(value) {}
+        float row() { return row_; }
+        float col() { return col_; }
+        float value() { return value_; }
+    private:
+        int row_, col_;
+        float value_;
+};
 
 void DEF_LIB_EXPORTED placeDefenses(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
               , std::list<Object*> obstacles, std::list<Defense*> defenses) {
-        
+    float cellWidth = mapWidth / nCellsWidth;
+    float cellHeight = mapHeight / nCellsHeight; 
+    float values[nCellsHeight][nCellsWidth];    // Matriz que almacena los valores de cada celda
+    List<Cell> cellList;
+    // Rellenamos la matriz de valores para colocar la primera defensa (Centro de extracción de minerales)
+    for(int i = 0; i < nCellsHeight; i++) {
+        for(int j = 0; j < nCellsWidth; j++) {
+            values[i][j] = cellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses);
+        }
+    }
+    // Agrupamos las celdas en una lista
+    List<Cell>::iterator itCells = cellList.begin();
+    for(int i = 0; i < nCellsHeight; i++) {
+        for(int j = 0; j < nCellsWidth; j++) {
+            Cell c(i, j, values[i][j]);
+            cellList.insert(itCells, c);
+            itCells++;
+        }
+    }
+    // Ordenamos la lista de menor a mayor valor
+    cellList.sort([](Cell& c1, Cell& c2) { return c1.value() < c2.value(); });
+    List<Defense*>::iterator itDefense = defenses.begin();
+    while(defenses.empty()) { // Mientras no esté colocada la primera defensa
+        // Seleccionamos la celda más prometedora, que es el primer elemento de cellList
+        List<Cell>::iterator promisingCell = cellList.begin();  // promisingCell guarda la celda más prometedora
+        // Si es factible...
+        if(factibility(*itDefense, promisingCell->row(), promisingCell->col(), obstacles, defenses, cellWidth, cellHeight, mapWidth, mapHeight)) {
+            // Asignamos a la posición de la defensa la posición del centro de la celda más prometedora
+            (*itDefense)->position = cellCenterToPosition(promisingCell->row(), promisingCell->col(), cellWidth, cellHeight);
+        }
+        // Sacamos de la lista la celda procesada
+        cellList.pop_front();
+    }
+    // Rellenamos la matriz de valores para colocar el resto de defensas
+    for(int i = 0; i < nCellsHeight; i++) {
+        for(int j = 0; j < nCellsWidth; j++) {
+            values[i][j] = cellValueRest(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses);
+        }
+    }
+
+
                 // ELIMINAR EL CONTENIDO DE ESTA FUNCIÓN Y HACERLA YO CORRECTAMENTE.
                 // CREAR UNA ESTRUCTURA PARA ALMACENAR LOS VALORES DE LAS CELDAS
                 // RECORRER LAS CELDAS LLAMANDO A CELLVALUE(...) Y ALMACENAR EL VALOR QUE DEVUELVA EN LA ESTRUCTURA ANTERIOR
@@ -105,7 +158,7 @@ void DEF_LIB_EXPORTED placeDefenses(bool** freeCells, int nCellsWidth, int nCell
                 // PARA LEL RESTO DE DEFENSAS:
                     // MIENTRAS HAYA DEFENSAS SIN POSICIÓN:
                         // SELECCIONAR LA CELDA MÁS PROMETEDORA
-                        // IF(FACTIBLE(...)) LA CELDA CANDIDATA PARA COLOCAR LA DEFENSA PRINCIPAL
+                        // IF(FACTIBLE(...)) LA CELDA CANDIDATA PARA COLOCAR LA DEFENSA
                             // COLOCARLA
                             // SACAR LA SIGUIENTE DEFENSA
                     // FIN MIENTRAS
