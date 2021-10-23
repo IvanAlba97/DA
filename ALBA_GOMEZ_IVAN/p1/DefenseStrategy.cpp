@@ -125,8 +125,10 @@ void DEF_LIB_EXPORTED placeDefenses(bool** freeCells, int nCellsWidth, int nCell
     }
     // Ordenamos la lista de menor a mayor valor
     cellList.sort([](Cell& c1, Cell& c2) { return c1.value() < c2.value(); });
+
+    // Colocamos la primera defensa
     List<Defense*>::iterator itDefense = defenses.begin();
-    while(defenses.empty()) { // Mientras no esté colocada la primera defensa
+    while(defenses.empty()) { // Mientras no esté colocada la primera defensa...
         // Seleccionamos la celda más prometedora, que es el primer elemento de cellList
         List<Cell>::iterator promisingCell = cellList.begin();  // promisingCell guarda la celda más prometedora
         // Si es factible...
@@ -143,7 +145,33 @@ void DEF_LIB_EXPORTED placeDefenses(bool** freeCells, int nCellsWidth, int nCell
             values[i][j] = cellValueRest(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses);
         }
     }
-
+    // Vaciamos la lista
+    while(!cellList.empty()) { cellList.pop_front(); }
+    // Agrupamos las celdas en la lista anterior
+    itCells = cellList.begin();
+    for(int i = 0; i < nCellsHeight; i++) {
+        for(int j = 0; j < nCellsWidth; j++) {
+            Cell c(i, j, values[i][j]);
+            cellList.insert(itCells, c);
+            itCells++;
+        }
+    }
+    // Ordenamos la lista de menor a mayor valor
+    cellList.sort([](Cell& c1, Cell& c2) { return c1.value() < c2.value(); });
+    // Colocamos el resto de defensas
+    itDefense = defenses.begin();
+    itDefense++;    // Empezamos a colocar la segunda defensa, puesto que la primera es el centro de extracción
+    while(itDefense != defenses.end()) {    // Mientras haya defensas sin colocar...
+        // Seleccionamos la celda más prometedora, que es el primer elemento de cellList
+        List<Cell>::iterator promisingCell = cellList.begin();  // promisingCell guarda la celda más prometedora
+        // Si es factible...
+        if(factibility(*itDefense, promisingCell->row(), promisingCell->col(), obstacles, defenses, cellWidth, cellHeight, mapWidth, mapHeight)) {
+            // Colocamos la defensa en el centro de la celda más prometedora
+            (*itDefense)->position = cellCenterToPosition(promisingCell->row(), promisingCell->col(), cellWidth, cellHeight);
+        }
+        // Sacamos de la lista la celda procesada
+        cellList.pop_front();
+    }
 
                 // ELIMINAR EL CONTENIDO DE ESTA FUNCIÓN Y HACERLA YO CORRECTAMENTE.
                 // CREAR UNA ESTRUCTURA PARA ALMACENAR LOS VALORES DE LAS CELDAS
@@ -163,7 +191,7 @@ void DEF_LIB_EXPORTED placeDefenses(bool** freeCells, int nCellsWidth, int nCell
                             // SACAR LA SIGUIENTE DEFENSA
                     // FIN MIENTRAS
 
-    float cellWidth = mapWidth / nCellsWidth;
+    /* float cellWidth = mapWidth / nCellsWidth;
     float cellHeight = mapHeight / nCellsHeight; 
 
     int maxAttemps = 1000;
@@ -174,7 +202,7 @@ void DEF_LIB_EXPORTED placeDefenses(bool** freeCells, int nCellsWidth, int nCell
         (*currentDefense)->position.y = ((int)(_RAND2(nCellsHeight))) * cellHeight + cellHeight * 0.5f;
         (*currentDefense)->position.z = 0; 
         ++currentDefense;
-    }
+    } */
 
 #ifdef PRINT_DEFENSE_STRATEGY
 
