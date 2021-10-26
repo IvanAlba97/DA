@@ -1,11 +1,11 @@
-APELLIDO1_APELLIDO2_NOMBRE = APELLIDO1_APELLIDO2_NOMBRE
-LEVEL = 3324
+APELLIDO1_APELLIDO2_NOMBRE = ALBA_GOMEZ_IVAN
+LEVEL = 4592
 
 ####################### FIN CONFIGURACION ###########################
 
 # Cuidado con la configuración del editor de texto. Los comandos de los objetivos deben de ir precedidos por tabuladores, NO ESPACIOS (error: falta separador). 
 
-FILES_TO_PACK_P1 = ../p1/DefenseStrategy.cpp ../p1/*.tex ../p1/p1.pdf ../autor.tex ../p1/Makefile ../p1/ppm.h ../p1/.conf
+FILES_TO_PACK_P1 = ../p1/DefenseStrategy.cpp ../p1/*.tex ../p1/p1.pdf ../autor.tex ../p1/Makefile ../p1/ppm.h ../p1/.conf #../.conf
 CC = g++ # C++ compiler
 CFLAGS = -fPIC -O2 -ffloat-store # -Wall -Wextra -g 
 LDFLAGS = -shared # linking flags
@@ -27,7 +27,7 @@ $(TARGET_LIB): $(SRCS)
 	$(CC) $(CFLAGS) ${LDFLAGS} -o $@ $^
 
 test: $(EXE)
-	./$< -l $(LEVEL) -v
+	./$< -l $(LEVEL) -v -t 4000
 
 savereplay: $(EXE)
 	./$< -l $(LEVEL) -v -replay $(REPLAYFILE)
