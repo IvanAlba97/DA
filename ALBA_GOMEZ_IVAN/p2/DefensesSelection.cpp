@@ -53,36 +53,28 @@ void mochila(float** tsp, unsigned int ases, std::list<Aux> myDefenses) {
         else tsp[0][j] = it->getValue();
         it++;
     }
-    std::cout<<"Antes del segundo bucle"<<std::endl;
     it = myDefenses.begin(); it++;
-    for(int i = 1; i < myDefenses.size() && it != myDefenses.end(); i++) {
+    for(int i = 1; i <= myDefenses.size() && it != myDefenses.end(); i++) {
         for(int j = 0; j <= ases; j++) {
             if(j < it->getCost()) tsp[i][j] = tsp[i-1][j];
             else tsp[i][j] = std::max(tsp[i-1][j], tsp[i-1][j-it->getCost()] + it->getValue());
         }
         it++;
     }
-    std::cout<<"Despues del segundo bucle"<<std::endl;
 }
 
 void selectIds(float** tsp, unsigned int ases, std::list<Aux> myDefenses, std::list<int> &selectedIDs) {
+    std::list<Aux>::iterator it = myDefenses.end()--;   // end() devuelve la siguiente posición a la última, por eso el --
     int j = ases;
-    std::list<Aux>::iterator it = myDefenses.end();
-    int i = myDefenses.size() - 1;
-
-    --it;
-    while( i > 0)
-    {
-        if(tsp[i][j] != tsp[i-1][j])
-        {
+    for(int i = myDefenses.size()-1; i > 0; i--, it--) {
+        if(tsp[i][j] != tsp[i-1][j]) {
             selectedIDs.push_back(it->getId());
             j = j - it->getCost();
         }
-        --i;
-        --it;
     }
-    if(tsp[0][j] != 0)
+    if(tsp[0][j] != 0) {
         selectedIDs.push_back(myDefenses.begin()->getId());
+    }
 }
 
 void DEF_LIB_EXPORTED selectDefenses(std::list<Defense*> defenses, unsigned int ases, std::list<int> &selectedIDs
@@ -107,18 +99,9 @@ for(it = defenses.begin(); it != defenses.end(); it++) {
 }
 // Rellenamos la tabla usando el algoritmo de la mochila discreta
 mochila(tsp, ases, myDefenses);
-std::cout<<"Despues de mochila"<<std::endl;
 // Añadimos a selectedIDs los ids de las defensas
-//selectIds(tsp, ases, myDefenses, selectedIDs);
+selectIds(tsp, ases, myDefenses, selectedIDs);
 
-for(it = defenses.begin(); it != defenses.end(); it++) {
-    if((*it)->cost <= ases) {
-        selectedIDs.push_back((*it)->id);
-        ases -= (*it)->cost;
-    }
-}
-
-// RELLENAR LA TSP (CODIFICAR EL ALGORITMO DE LA MOCHILA)
-    // POR CADA DEFENSA CALCULAR SU valor()
-// RECUPERAR LA SOLUCION Y GUARDAR LOS id EN selectedIDs
+// Para imprimir la lista selectedIDs:
+// for( auto item : selectedIDs ) std::cout << item << std::endl;
 }
