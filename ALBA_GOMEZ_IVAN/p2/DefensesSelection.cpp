@@ -55,8 +55,13 @@ void mochila(float** tsp, unsigned int ases, std::list<Aux> myDefenses) {
     }
     std::cout<<"Antes del segundo bucle"<<std::endl;
     it = myDefenses.begin(); it++;
-    
-    
+    for(int i = 1; i < myDefenses.size() && it != myDefenses.end(); i++) {
+        for(int j = 0; j <= ases; j++) {
+            if(j < it->getCost()) tsp[i][j] = tsp[i-1][j];
+            else tsp[i][j] = std::max(tsp[i-1][j], tsp[i-1][j-it->getCost()] + it->getValue());
+        }
+        it++;
+    }
     std::cout<<"Despues del segundo bucle"<<std::endl;
 }
 
