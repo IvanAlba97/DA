@@ -1,15 +1,16 @@
 \begin{lstlisting}
-// sustituya este codigo por su respuesta
-void selectDefenses(...) {
-
-    unsigned int cost = 0;
-    std::list<Defense*>::iterator it = defenses.begin();
-    while(it != defenses.end()) {
-        if(cost + (*it)->cost <= ases) {
-            selectedIDs.push_back((*it)->id);
-            cost += (*it)->cost;
+void selectIds(float** tsp, unsigned int ases, std::list<Aux> myDefenses, std::list<int> &selectedIDs) {
+    std::list<Aux>::iterator it = myDefenses.end()--;   // end() devuelve la siguiente posición a la última, por eso el --
+    int j = ases;
+    for(int i = myDefenses.size()-1; i > 0; i--, it--) {
+        if(tsp[i][j] != tsp[i-1][j]) {
+            selectedIDs.push_back(it->getId());
+            //std::cout<<it->getId()<<std::endl;
+            j = j - it->getCost();
         }
-        ++it;
+    }
+    if(tsp[0][j] != 0) {
+        selectedIDs.push_back(myDefenses.begin()->getId());
     }
 }
 \end{lstlisting}

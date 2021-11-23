@@ -63,12 +63,14 @@ void mochila(float** tsp, unsigned int ases, std::list<Aux> myDefenses) {
     }
 }
 
+// Función que almacena los ids de las defensas seleccionadas en selectedIDs
 void selectIds(float** tsp, unsigned int ases, std::list<Aux> myDefenses, std::list<int> &selectedIDs) {
     std::list<Aux>::iterator it = myDefenses.end()--;   // end() devuelve la siguiente posición a la última, por eso el --
     int j = ases;
     for(int i = myDefenses.size()-1; i > 0; i--, it--) {
         if(tsp[i][j] != tsp[i-1][j]) {
             selectedIDs.push_back(it->getId());
+            //std::cout<<it->getId()<<std::endl;
             j = j - it->getCost();
         }
     }
@@ -79,29 +81,25 @@ void selectIds(float** tsp, unsigned int ases, std::list<Aux> myDefenses, std::l
 
 void DEF_LIB_EXPORTED selectDefenses(std::list<Defense*> defenses, unsigned int ases, std::list<int> &selectedIDs
             , float mapWidth, float mapHeight, std::list<Object*> obstacles) {
-// Como la primera defensa es el centro de extracción, hay que comprarla siempre, por lo tanto ...ón, hay que comprarla siempre, por lo tanto ...
-std::list<Defense*>::iterator it = defenses.begin();// Como la primera defensa es el centro de extracción, hay que comprarla
-selectedIDs.push_back((*it)->id);
-ases -= (*it)->cost;
-defenses.erase(it);
-// Creamos la estructura para gestionar la tabla de subproblemas resueltos
-int row = defenses.size();  // Número de defensas
-int col = ases; // Número de recursos
-//float tsp[row][col];
-float** tsp = new float*[defenses.size()];
-for(size_t i = 0; i < defenses.size(); ++i) tsp[i] = new float[ases+1];
-// Creamos una lista de defensas (Lista de Aux)
-std::list<Aux> myDefenses;
-// Le damos valores
-it = defenses.begin();
-for(it = defenses.begin(); it != defenses.end(); it++) {
-    myDefenses.push_back(Aux((*it)->id, (*it)->cost, defenseValue(it)));
-}
-// Rellenamos la tabla usando el algoritmo de la mochila discreta
-mochila(tsp, ases, myDefenses);
-// Añadimos a selectedIDs los ids de las defensas
-selectIds(tsp, ases, myDefenses, selectedIDs);
-
-// Para imprimir la lista selectedIDs:
-// for( auto item : selectedIDs ) std::cout << item << std::endl;
+    // Como la primera defensa es el centro de extracción, hay que comprarla siempre, por lo tanto...
+    std::list<Defense*>::iterator it = defenses.begin();// Como la primera defensa es el centro de extracción, hay que comprarla
+    selectedIDs.push_back((*it)->id);
+    ases -= (*it)->cost;
+    defenses.erase(it);
+    // Creamos la estructura para gestionar la tabla de subproblemas resueltos
+    float** tsp = new float*[defenses.size()];
+    for(size_t i = 0; i < defenses.size(); ++i) tsp[i] = new float[ases+1];
+    // Creamos una lista de defensas (Lista de Aux)
+    std::list<Aux> myDefenses;
+    // Le damos valores
+    it = defenses.begin();
+    for(it = defenses.begin(); it != defenses.end(); it++) {
+        myDefenses.push_back(Aux((*it)->id, (*it)->cost, defenseValue(it)));
+    }
+    // Rellenamos la tabla usando el algoritmo de la mochila discreta
+    mochila(tsp, ases, myDefenses);
+    // Añadimos a selectedIDs los ids de las defensas
+    selectIds(tsp, ases, myDefenses, selectedIDs);
+    // Para imprimir la lista selectedIDs
+    //for( auto item : selectedIDs ) std::cout << item << std::endl;
 }
