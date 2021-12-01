@@ -72,96 +72,305 @@ class Cell {
         float value_;
 };
 
-Cell selection(std::list<Cell> cellList, int tipo) { 
+void insertionSort(std::vector<Cell>& cellVector, int i, int j) {
+    Cell cell;
+    for (int l = i + 1; l <= j; l++) {
+        cell = cellVector[l];
+        int p = l - 1;
+        while (p >= i && cellVector[p].getValue() < cell.getValue()) {
+            cellVector[p+1] = cellVector[p];
+            p--;
+        }
+        cellVector[p+1] = cell;
+    }
+}
+
+// De las diapositivas
+void fusion(std::vector<Cell>& cellVector, int i, int k, int j) {
+    int n = j - i + 1;
+    int p = i;
+    int q = k + 1;
+    std::vector<Cell> w(n);
+    for(int l = 0; l < n; l++) {
+        if(p <= k && (q > j || cellVector[p].getValue() <= cellVector[q].getValue())) {
+            w[l] = cellVector[p];
+            p++;
+        } else {
+            w[l] = cellVector[q];
+            q++;
+        }
+    }
+    for(int l = 0; l < n; l++) { cellVector[i+l] = w[l]; }
+
+}
+
+// De las diapositivas
+void fusionSort(std::vector<Cell>& cellVector, int i, int j) {
+    int n = j - i + 1;
+    int umbral = 2;
+    if(n <= umbral) {
+        insertionSort(cellVector, i, j);
+    } else {
+        int k = i -1 + (n / 2);
+        fusionSort(cellVector, i, k);
+        fusionSort(cellVector, k + 1, j);
+        fusion(cellVector, i, k, j);
+    }
+}
+
+//  De las diapositivas
+int pivote(std::vector<Cell>& cellVector, int i, int j) {
+    int p = 1;
+    Cell x = cellVector[i];
+    for(int k = i + 1; k < j; k++) {
+        if(cellVector[k].getValue() <= x.getValue()) {
+            p++;
+            Cell aux = cellVector[p];
+            cellVector[p] = cellVector[k];
+            cellVector[k] = aux;
+        }
+    }
+    cellVector[i] = cellVector[p];
+    cellVector[p] = x;
+    return x.getValue();
+}
+
+// De las diapositivas
+void fastSort(std::vector<Cell>& cellVector, int i, int j) {
+    int n = j - i + 1;
+    int umbral = 2;
+    if(n <= umbral) {
+        insertionSort(cellVector, i, j);
+    } else {
+        int p = pivote(cellVector, i, j);
+        fusionSort(cellVector, i, p - 1);
+        fusionSort(cellVector, p + 1, j);
+    }
+}
+
+void swap(Cell a, Cell b) {
+    Cell aux = a;
+    a = b;
+    b = aux;
+}
+
+// De https://www.delftstack.com/es/tutorial/algorithm/heap-sort/
+void heapify(std::vector<Cell>& cellVector, int n, int i) {
+    int pariente = i;
+    int hijoIzq = 2 * i + 1;
+    int hijoDer = 2 * i + 2;
+    if(hijoIzq < n && cellVector[hijoIzq].getValue() > cellVector[pariente].getValue()) {
+        pariente = hijoIzq;
+    }
+    if(hijoDer < n && cellVector[hijoDer].getValue() > cellVector[pariente].getValue()) {
+        pariente = hijoDer;
+    }
+    if(pariente != i) {
+        swap(cellVector[i], cellVector[pariente]);
+        heapify(cellVector, n, pariente);
+    }
+}
+
+// De https://www.delftstack.com/es/tutorial/algorithm/heap-sort/
+void heapSort(std::vector<Cell>& cellVector, int n) {
+    for(int i = n / 2 - 1; i >= 0; i--) {
+        heapify(cellVector, n, i);
+    }
+    for(int i = n - 1; i >= 0; i--) {
+        swap(cellVector[0], cellVector[i]);
+        heapify(cellVector, i, 0);
+    }
+}
+
+Cell selection(std::vector<Cell> cellVector, int tipo) { 
     Cell aux;
     switch(tipo) {
         case 0:     // Sin preordenación
-            aux = cellList.front();
-            for(List<Cell>::iterator itCells = cellList.begin(); itCells != cellList.end(); itCells++) {
+            aux = cellVector.front();
+            for(std::vector<Cell>::iterator itCells = cellVector.begin(); itCells != cellVector.end(); itCells++) {
                 if(itCells->getValue() < aux.getValue()) {
                     aux = (*itCells);
                 }
             }
             break;
         case 1:     // Ordenación por fusión
-
+            aux = cellVector.front();
             break;
         case 2:     // Ordenación rápida
-
+            aux = cellVector.front();
             break;
         case 3:     // Ordenación por montículo
-        
+            aux = cellVector.front();
             break;
     }
     return aux;
 }
 
-void DEF_LIB_EXPORTED placeDefenses_SPO(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
+void placeDefenses_SPO(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
               , List<Object*> obstacles, List<Defense*> defenses, float cellWidth, float cellHeight) {
-    float values[nCellsHeight][nCellsWidth];    // Matriz que almacena los valores de cada celda
-    List<Cell> cellList;
+    /* float values[nCellsHeight][nCellsWidth];    // Matriz que almacena los valores de cada celda
+    std::vector<Cell> cellVector;
     // Rellenamos la matriz de valores para colocar las defensas
     for(int i = 0; i < nCellsHeight; i++) {
         for(int j = 0; j < nCellsWidth; j++) {
             values[i][j] = defaultCellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses);
         }
     }
-    // Agrupamos las celdas en una lista
-    List<Cell>::iterator itCells = cellList.begin();
+    // Agrupamos las celdas en un vector
     for(int i = 0; i < nCellsHeight; i++) {
         for(int j = 0; j < nCellsWidth; j++) {
             Cell c(i, j, values[i][j]);
-            cellList.insert(itCells, c);
-            itCells++;
+            cellVector.push_back(c);
         }
     }
     // Colocamos las defensas
     List<Defense*>::iterator itDefense = defenses.begin();
-    itDefense = defenses.begin();
     bool placed;
     while(itDefense != defenses.end()) {    // Mientras haya defensas sin colocar...
         placed = false;
         while(!placed) {
             // Seleccionamos la celda más prometedora
-            Cell promisingCell = selection(cellList, 0);  // promisingCell guarda la celda más prometedora
+            Cell promisingCell = selection(cellVector, 0);  // promisingCell guarda la celda más prometedora
             if(factibility(*itDefense, promisingCell.getRow(), promisingCell.getCol(), obstacles, defenses, cellWidth, cellHeight, mapWidth, mapHeight)) {
                 // Colocamos la defensa en el centro de la celda más prometedora
                 (*itDefense)->position = cellCenterToPosition(promisingCell.getRow(), promisingCell.getCol(), cellWidth, cellHeight);
                 placed = true;
             }
-            // Sacamos de la lista la celda procesada
-            cellList.pop_front();
+            // Sacamos del vector la celda procesada
+            cellVector.erase(//posicion de promisingCell dentro del vector cellVector);
+        }
+        itDefense++;
+    } */
+}
+
+void placeDefenses_OF(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
+              , List<Object*> obstacles, List<Defense*> defenses, float cellWidth, float cellHeight) {
+    float values[nCellsHeight][nCellsWidth];    // Matriz que almacena los valores de cada celda
+    std::vector<Cell> cellVector;
+    // Rellenamos la matriz de valores para colocar las defensas
+    for(int i = 0; i < nCellsHeight; i++) {
+        for(int j = 0; j < nCellsWidth; j++) {
+            values[i][j] = defaultCellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses);
+        }
+    }
+    // Agrupamos las celdas en un vector
+    for(int i = 0; i < nCellsHeight; i++) {
+        for(int j = 0; j < nCellsWidth; j++) {
+            Cell c(i, j, values[i][j]);
+            cellVector.push_back(c);
+        }
+    }
+    // Ordenamos el vector con el algoritmo de ordenación por fusión
+    fusionSort(cellVector, 0, cellVector.size()-1);
+    // Colocamos las defensas
+    List<Defense*>::iterator itDefense = defenses.begin();
+    bool placed;
+    while(itDefense != defenses.end()) {    // Mientras haya defensas sin colocar...
+        placed = false;
+        while(!placed) {
+            // Seleccionamos la celda más prometedora
+            Cell promisingCell = selection(cellVector, 1);  // promisingCell guarda la celda más prometedora
+            if(factibility(*itDefense, promisingCell.getRow(), promisingCell.getCol(), obstacles, defenses, cellWidth, cellHeight, mapWidth, mapHeight)) {
+                // Colocamos la defensa en el centro de la celda más prometedora
+                (*itDefense)->position = cellCenterToPosition(promisingCell.getRow(), promisingCell.getCol(), cellWidth, cellHeight);
+                placed = true;
+            }
+            // Sacamos del vector la celda procesada ( la primera del vector )
+            cellVector.erase(cellVector.begin());
         }
         itDefense++;
     }
 }
 
-void DEF_LIB_EXPORTED placeDefenses_OF(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
+void placeDefenses_OR(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
               , List<Object*> obstacles, List<Defense*> defenses, float cellWidth, float cellHeight) {
-
+    float values[nCellsHeight][nCellsWidth];    // Matriz que almacena los valores de cada celda
+    std::vector<Cell> cellVector;
+    // Rellenamos la matriz de valores para colocar las defensas
+    for(int i = 0; i < nCellsHeight; i++) {
+        for(int j = 0; j < nCellsWidth; j++) {
+            values[i][j] = defaultCellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses);
+        }
+    }
+    // Agrupamos las celdas en un vector
+    for(int i = 0; i < nCellsHeight; i++) {
+        for(int j = 0; j < nCellsWidth; j++) {
+            Cell c(i, j, values[i][j]);
+            cellVector.push_back(c);
+        }
+    }
+    // Ordenamos el vector con el algoritmo de ordenación rápida
+    fastSort(cellVector, 0, cellVector.size()-1);
+    // Colocamos las defensas
+    List<Defense*>::iterator itDefense = defenses.begin();
+    bool placed;
+    while(itDefense != defenses.end()) {    // Mientras haya defensas sin colocar...
+        placed = false;
+        while(!placed) {
+            // Seleccionamos la celda más prometedora
+            Cell promisingCell = selection(cellVector, 2);  // promisingCell guarda la celda más prometedora
+            if(factibility(*itDefense, promisingCell.getRow(), promisingCell.getCol(), obstacles, defenses, cellWidth, cellHeight, mapWidth, mapHeight)) {
+                // Colocamos la defensa en el centro de la celda más prometedora
+                (*itDefense)->position = cellCenterToPosition(promisingCell.getRow(), promisingCell.getCol(), cellWidth, cellHeight);
+                placed = true;
+            }
+            // Sacamos del vector la celda procesada ( la primera del vector )
+            cellVector.erase(cellVector.begin());
+        }
+        itDefense++;
+    }
 }
 
-void DEF_LIB_EXPORTED placeDefenses_OR(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
+void placeDefenses_OM(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
               , List<Object*> obstacles, List<Defense*> defenses, float cellWidth, float cellHeight) {
-
-}
-
-void DEF_LIB_EXPORTED placeDefenses_OM(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
-              , List<Object*> obstacles, List<Defense*> defenses, float cellWidth, float cellHeight) {
-
+    float values[nCellsHeight][nCellsWidth];    // Matriz que almacena los valores de cada celda
+    std::vector<Cell> cellVector;
+    // Rellenamos la matriz de valores para colocar las defensas
+    for(int i = 0; i < nCellsHeight; i++) {
+        for(int j = 0; j < nCellsWidth; j++) {
+            values[i][j] = defaultCellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses);
+        }
+    }
+    // Agrupamos las celdas en un vector
+    for(int i = 0; i < nCellsHeight; i++) {
+        for(int j = 0; j < nCellsWidth; j++) {
+            Cell c(i, j, values[i][j]);
+            cellVector.push_back(c);
+        }
+    }
+    // Ordenamos el vector con el algoritmo de ordenación por montículos
+    heapSort(cellVector, cellVector.size());
+    // Colocamos las defensas
+    List<Defense*>::iterator itDefense = defenses.begin();
+    bool placed;
+    while(itDefense != defenses.end()) {    // Mientras haya defensas sin colocar...
+        placed = false;
+        while(!placed) {
+            // Seleccionamos la celda más prometedora
+            Cell promisingCell = selection(cellVector, 2);  // promisingCell guarda la celda más prometedora
+            if(factibility(*itDefense, promisingCell.getRow(), promisingCell.getCol(), obstacles, defenses, cellWidth, cellHeight, mapWidth, mapHeight)) {
+                // Colocamos la defensa en el centro de la celda más prometedora
+                (*itDefense)->position = cellCenterToPosition(promisingCell.getRow(), promisingCell.getCol(), cellWidth, cellHeight);
+                placed = true;
+            }
+            // Sacamos del vector la celda procesada ( la primera del vector )
+            cellVector.erase(cellVector.begin());
+        }
+        itDefense++;
+    }
 }
 
 void DEF_LIB_EXPORTED placeDefenses3(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
-              , List<Object*> obstacles, List<Defense*> defenses, float cellWidth, float cellHeight) {
-
-    
+              , List<Object*> obstacles, List<Defense*> defenses) {
 
     float cellWidth = mapWidth / nCellsWidth;
-    float cellHeight = mapHeight / nCellsHeight; 
- 
+    float cellHeight = mapHeight / nCellsHeight;
+
+    int maxAttemps = 10;
+
     // SIN PREORDENACIÓN
 
-    int maxAttemps = 100;
+/*     
 	cronometro c1;
     long int r1 = 0;
     c1.activar();
@@ -175,7 +384,7 @@ void DEF_LIB_EXPORTED placeDefenses3(bool** freeCells, int nCellsWidth, int nCel
     } while(c1.tiempo() < 1.0);
     c1.parar();
     std::cout << (nCellsWidth * nCellsHeight) << '\t' << c1.tiempo() / r1 << '\t' << c1.tiempo() / r1 << '\t' << c1.tiempo() / r1 << '\t' << c1.tiempo() / r1 << std::endl;
-
+ */
     // ORDENACIÓN POR FUSIÓN
 
     cronometro c2;
