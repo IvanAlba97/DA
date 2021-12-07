@@ -245,18 +245,11 @@ void placeDefenses_SPO(bool** freeCells, int nCellsWidth, int nCellsHeight, floa
 
 void placeDefenses_OF(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
               , List<Object*> obstacles, List<Defense*> defenses, float cellWidth, float cellHeight) {
-    float values[nCellsHeight][nCellsWidth];    // Matriz que almacena los valores de cada celda
     std::vector<Cell> cellVector;
-    // Rellenamos la matriz de valores para colocar las defensas
-    for(int i = 0; i < nCellsHeight; i++) {
-        for(int j = 0; j < nCellsWidth; j++) {
-            values[i][j] = defaultCellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses);
-        }
-    }
     // Agrupamos las celdas en un vector
     for(int i = 0; i < nCellsHeight; i++) {
         for(int j = 0; j < nCellsWidth; j++) {
-            Cell c(i, j, values[i][j]);
+            Cell c(i, j, defaultCellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses));
             cellVector.push_back(c);
         }
     }
@@ -284,18 +277,11 @@ void placeDefenses_OF(bool** freeCells, int nCellsWidth, int nCellsHeight, float
 
 void placeDefenses_OR(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
               , List<Object*> obstacles, List<Defense*> defenses, float cellWidth, float cellHeight) {
-    float values[nCellsHeight][nCellsWidth];    // Matriz que almacena los valores de cada celda
     std::vector<Cell> cellVector;
-    // Rellenamos la matriz de valores para colocar las defensas
-    for(int i = 0; i < nCellsHeight; i++) {
-        for(int j = 0; j < nCellsWidth; j++) {
-            values[i][j] = defaultCellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses);
-        }
-    }
     // Agrupamos las celdas en un vector
     for(int i = 0; i < nCellsHeight; i++) {
         for(int j = 0; j < nCellsWidth; j++) {
-            Cell c(i, j, values[i][j]);
+            Cell c(i, j, defaultCellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses));
             cellVector.push_back(c);
         }
     }
@@ -323,18 +309,11 @@ void placeDefenses_OR(bool** freeCells, int nCellsWidth, int nCellsHeight, float
 
 void placeDefenses_OM(bool** freeCells, int nCellsWidth, int nCellsHeight, float mapWidth, float mapHeight
               , List<Object*> obstacles, List<Defense*> defenses, float cellWidth, float cellHeight) {
-    float values[nCellsHeight][nCellsWidth];    // Matriz que almacena los valores de cada celda
     std::vector<Cell> cellVector;
-    // Rellenamos la matriz de valores para colocar las defensas
-    for(int i = 0; i < nCellsHeight; i++) {
-        for(int j = 0; j < nCellsWidth; j++) {
-            values[i][j] = defaultCellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses);
-        }
-    }
     // Agrupamos las celdas en un vector
     for(int i = 0; i < nCellsHeight; i++) {
         for(int j = 0; j < nCellsWidth; j++) {
-            Cell c(i, j, values[i][j]);
+            Cell c(i, j, defaultCellValue(i, j, freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses));
             cellVector.push_back(c);
         }
     }
