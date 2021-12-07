@@ -1,1 +1,40 @@
-Escriba aquí su respuesta al ejercicio 3.
+void insertionSort(std::vector<Cell>& cellVector, int i, int j) {
+    Cell cell;
+    for (int l = i + 1; l <= j; l++) {
+        cell = cellVector[l];
+        int p = l - 1;
+        while (p >= i && cellVector[p].getValue() < cell.getValue()) {
+            cellVector[p+1] = cellVector[p];
+            p--;
+        }
+        cellVector[p+1] = cell;
+    }
+}
+
+int pivote(std::vector<Cell>& cellVector, int i, int j) {
+    int p = i;
+    Cell x = cellVector[i];
+    for(int k = i + 1; k <= j; k++) {
+        if(cellVector[k].getValue() <= x.getValue()) {
+            p++;
+            Cell aux = cellVector[p];
+            cellVector[p] = cellVector[k];
+            cellVector[k] = aux;
+        }
+    }
+    cellVector[i] = cellVector[p];
+    cellVector[p] = x;
+    return p;
+}
+
+void fastSort(std::vector<Cell>& cellVector, int i, int j) {
+    int n = j - i + 1;
+    int umbral = 2;
+    if(n <= umbral) {
+        insertionSort(cellVector, i, j);
+    } else {
+        int p = pivote(cellVector, i, j);
+        fastSort(cellVector, i, p - 1);
+        fastSort(cellVector, p + 1, j);
+    }
+}

@@ -1,1 +1,12 @@
-Escriba aquí su respuesta al ejercicio 1.
+Para la representación del terreno de batalla he utilizado un vector de Cell, cuya estructura es la siguiente:
+
+class Cell {
+    public:
+        Cell(int row = 0, int col = 0, float value = 0) : row_(row), col_(col), value_(value) {}
+        int getRow() { return row_; }
+        int getCol() { return col_; }
+        float getValue() { return value_; }
+    private:
+        int row_, col_;
+        float value_;
+};

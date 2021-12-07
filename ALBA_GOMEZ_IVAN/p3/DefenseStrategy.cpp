@@ -101,7 +101,6 @@ void fusion(std::vector<Cell>& cellVector, int i, int k, int j) {
         }
     }
     for(int l = 0; l < n; l++) { cellVector[i+l] = w[l]; }
-
 }
 
 // De las diapositivas
@@ -365,7 +364,7 @@ void DEF_LIB_EXPORTED placeDefenses3(bool** freeCells, int nCellsWidth, int nCel
     std::cout << (nCellsWidth * nCellsHeight) << '\t' << c1.tiempo() / r1 << '\t' << c1.tiempo() / r1 << '\t' << c1.tiempo() / r1 << '\t' << c1.tiempo() / r1 << std::endl;
  */
     // ORDENACIÓN POR FUSIÓN
-    std::cout << "ORDENACION POR FUSION" << std::endl;
+    // std::cout << "ORDENACION POR FUSION" << std::endl;
     cronometro c2;
     long int r2 = 0;
     c2.activar();
@@ -381,7 +380,7 @@ void DEF_LIB_EXPORTED placeDefenses3(bool** freeCells, int nCellsWidth, int nCel
     std::cout << (nCellsWidth * nCellsHeight) << '\t' << c2.tiempo() / r2 << std::endl;
 
     // ORDENACIÓN RÁPIDA
-    std::cout << "ORDENACION RAPIDA" << std::endl;
+    // std::cout << "ORDENACION RAPIDA" << std::endl;
     cronometro c3;
     long int r3 = 0;
     c3.activar();
@@ -397,7 +396,7 @@ void DEF_LIB_EXPORTED placeDefenses3(bool** freeCells, int nCellsWidth, int nCel
     std::cout << (nCellsWidth * nCellsHeight) << '\t' << c3.tiempo() / r3 << std::endl;
 
     // ORDENACIÓN POR MONTÍCULOS
-    std::cout << "ORDENACION POR MONTICULOS" << std::endl;
+    // std::cout << "ORDENACION POR MONTICULOS" << std::endl;
     cronometro c4;
     long int r4 = 0;
     c4.activar();

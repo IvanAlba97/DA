@@ -1,1 +1,42 @@
-Escriba aquí su respuesta al ejercicio 2.
+void insertionSort(std::vector<Cell>& cellVector, int i, int j) {
+    Cell cell;
+    for (int l = i + 1; l <= j; l++) {
+        cell = cellVector[l];
+        int p = l - 1;
+        while (p >= i && cellVector[p].getValue() < cell.getValue()) {
+            cellVector[p+1] = cellVector[p];
+            p--;
+        }
+        cellVector[p+1] = cell;
+    }
+}
+
+void fusion(std::vector<Cell>& cellVector, int i, int k, int j) {
+    int n = j - i + 1;
+    int p = i;
+    int q = k + 1;
+    std::vector<Cell> w(n);
+    for(int l = 0; l < n; l++) {
+        if(p <= k && (q > j || cellVector[p].getValue() <= cellVector[q].getValue())) {
+            w[l] = cellVector[p];
+            p++;
+        } else {
+            w[l] = cellVector[q];
+            q++;
+        }
+    }
+    for(int l = 0; l < n; l++) { cellVector[i+l] = w[l]; }
+}
+
+void fusionSort(std::vector<Cell>& cellVector, int i, int j) {
+    int n = j - i + 1;
+    int umbral = 2;
+    if(n <= umbral) {
+        insertionSort(cellVector, i, j);
+    } else {
+        int k = i -1 + (n / 2);
+        fusionSort(cellVector, i, k);
+        fusionSort(cellVector, k + 1, j);
+        fusion(cellVector, i, k, j);
+    }
+}
