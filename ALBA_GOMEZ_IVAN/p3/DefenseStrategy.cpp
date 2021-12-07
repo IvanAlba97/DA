@@ -120,9 +120,9 @@ void fusionSort(std::vector<Cell>& cellVector, int i, int j) {
 
 //  De las diapositivas
 int pivote(std::vector<Cell>& cellVector, int i, int j) {
-    int p = 1;
+    int p = i;
     Cell x = cellVector[i];
-    for(int k = i + 1; k < j; k++) {
+    for(int k = i + 1; k <= j; k++) {
         if(cellVector[k].getValue() <= x.getValue()) {
             p++;
             Cell aux = cellVector[p];
@@ -132,7 +132,7 @@ int pivote(std::vector<Cell>& cellVector, int i, int j) {
     }
     cellVector[i] = cellVector[p];
     cellVector[p] = x;
-    return x.getValue();
+    return p;
 }
 
 // De las diapositivas
@@ -143,8 +143,8 @@ void fastSort(std::vector<Cell>& cellVector, int i, int j) {
         insertionSort(cellVector, i, j);
     } else {
         int p = pivote(cellVector, i, j);
-        fusionSort(cellVector, i, p - 1);
-        fusionSort(cellVector, p + 1, j);
+        fastSort(cellVector, i, p - 1);
+        fastSort(cellVector, p + 1, j);
     }
 }
 
@@ -365,8 +365,8 @@ void DEF_LIB_EXPORTED placeDefenses3(bool** freeCells, int nCellsWidth, int nCel
 
     float cellWidth = mapWidth / nCellsWidth;
     float cellHeight = mapHeight / nCellsHeight;
-
-    int maxAttemps = 10;
+    float E_ABS = 0.01;
+    float E_REL = 0.001;
 
     // SIN PREORDENACIÓN
 
@@ -381,56 +381,56 @@ void DEF_LIB_EXPORTED placeDefenses3(bool** freeCells, int nCellsWidth, int nCel
 		}
         maxAttemps--;
 		r1++;
-    } while(c1.tiempo() < 1.0);
+    } while(c1.tiempo() < E_ABS/E_REL+E_ABS);
     c1.parar();
     std::cout << (nCellsWidth * nCellsHeight) << '\t' << c1.tiempo() / r1 << '\t' << c1.tiempo() / r1 << '\t' << c1.tiempo() / r1 << '\t' << c1.tiempo() / r1 << std::endl;
  */
     // ORDENACIÓN POR FUSIÓN
-
+    std::cout << "ORDENACION POR FUSION" << std::endl;
     cronometro c2;
     long int r2 = 0;
     c2.activar();
     do {	
 		List<Defense*>::iterator currentDefense = defenses.begin();
-		while(currentDefense != defenses.end() && maxAttemps > 0) {
+		while(currentDefense != defenses.end()) {
 			placeDefenses_OF(freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses, cellWidth, cellHeight);
+            currentDefense++;
 		}
-        maxAttemps--;
 		r2++;
-    } while(c2.tiempo() < 1.0);
+    } while(c2.tiempo() < E_ABS/E_REL+E_ABS);
     c2.parar();
-    std::cout << (nCellsWidth * nCellsHeight) << '\t' << c2.tiempo() / r2 << '\t' << c2.tiempo() / r2 << '\t' << c2.tiempo() / r2 << '\t' << c2.tiempo() / r2 << std::endl;
+    std::cout << (nCellsWidth * nCellsHeight) << '\t' << c2.tiempo() / r2 << std::endl;
 
     // ORDENACIÓN RÁPIDA
-
+    std::cout << "ORDENACION RAPIDA" << std::endl;
     cronometro c3;
     long int r3 = 0;
     c3.activar();
     do {	
 		List<Defense*>::iterator currentDefense = defenses.begin();
-		while(currentDefense != defenses.end() && maxAttemps > 0) {
+		while(currentDefense != defenses.end()) {
 			placeDefenses_OR(freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses, cellWidth, cellHeight);
+            currentDefense++;
 		}
-        maxAttemps--;
 		r3++;
-    } while(c3.tiempo() < 1.0);
+    } while(c3.tiempo() < E_ABS/E_REL+E_ABS);
     c3.parar();
-    std::cout << (nCellsWidth * nCellsHeight) << '\t' << c3.tiempo() / r3 << '\t' << c3.tiempo() / r3 << '\t' << c3.tiempo() / r3 << '\t' << c3.tiempo() / r3 << std::endl;
+    std::cout << (nCellsWidth * nCellsHeight) << '\t' << c3.tiempo() / r3 << std::endl;
 
     // ORDENACIÓN POR MONTÍCULOS
-
+    std::cout << "ORDENACION POR MONTICULOS" << std::endl;
     cronometro c4;
     long int r4 = 0;
     c4.activar();
     do {	
 		List<Defense*>::iterator currentDefense = defenses.begin();
-		while(currentDefense != defenses.end() && maxAttemps > 0) {
+		while(currentDefense != defenses.end()) {
 			placeDefenses_OM(freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses, cellWidth, cellHeight);
-		}
-        maxAttemps--;
+            currentDefense++;
+		}   
 		r4++;
-    } while(c4.tiempo() < 1.0);
+    } while(c4.tiempo() < E_ABS/E_REL+E_ABS);
     c4.parar();
-    std::cout << (nCellsWidth * nCellsHeight) << '\t' << c4.tiempo() / r4 << '\t' << c4.tiempo() / r4 << '\t' << c4.tiempo() / r4 << '\t' << c4.tiempo() / r4 << std::endl;
+    std::cout << (nCellsWidth * nCellsHeight) << '\t' << c4.tiempo() / r4 << std::endl;
 
 }
