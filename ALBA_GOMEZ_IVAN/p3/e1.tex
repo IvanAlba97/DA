@@ -1,5 +1,7 @@
 Para la representación del terreno de batalla he utilizado un vector de Cell, cuya estructura es la siguiente:
 
+\begin{lstlisting}
+
 class Cell {
     public:
         Cell(int row = 0, int col = 0, float value = 0) : row_(row), col_(col), value_(value) {}
@@ -11,6 +13,12 @@ class Cell {
         float value_;
 };
 
+\end{lstlisting}
+
 Por lo tanto: 
 
+\begin{lstlisting}
+
 std::vector<Cell> cellVector;
+
+\end{lstlisting}
