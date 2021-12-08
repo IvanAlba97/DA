@@ -369,11 +369,7 @@ void DEF_LIB_EXPORTED placeDefenses3(bool** freeCells, int nCellsWidth, int nCel
     long int r2 = 0;
     c2.activar();
     do {	
-		List<Defense*>::iterator currentDefense = defenses.begin();
-		while(currentDefense != defenses.end()) {
-			placeDefenses_OF(freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses, cellWidth, cellHeight);
-            currentDefense++;
-		}
+		placeDefenses_OF(freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses, cellWidth, cellHeight);
 		r2++;
     } while(c2.tiempo() < E_ABS/E_REL+E_ABS);
     c2.parar();
@@ -385,11 +381,7 @@ void DEF_LIB_EXPORTED placeDefenses3(bool** freeCells, int nCellsWidth, int nCel
     long int r3 = 0;
     c3.activar();
     do {	
-		List<Defense*>::iterator currentDefense = defenses.begin();
-		while(currentDefense != defenses.end()) {
-			placeDefenses_OR(freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses, cellWidth, cellHeight);
-            currentDefense++;
-		}
+		placeDefenses_OR(freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses, cellWidth, cellHeight);
 		r3++;
     } while(c3.tiempo() < E_ABS/E_REL+E_ABS);
     c3.parar();
@@ -401,11 +393,7 @@ void DEF_LIB_EXPORTED placeDefenses3(bool** freeCells, int nCellsWidth, int nCel
     long int r4 = 0;
     c4.activar();
     do {	
-		List<Defense*>::iterator currentDefense = defenses.begin();
-		while(currentDefense != defenses.end()) {
-			placeDefenses_OM(freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses, cellWidth, cellHeight);
-            currentDefense++;
-		}   
+		placeDefenses_OM(freeCells, nCellsWidth, nCellsHeight, mapWidth, mapHeight, obstacles, defenses, cellWidth, cellHeight);
 		r4++;
     } while(c4.tiempo() < E_ABS/E_REL+E_ABS);
     c4.parar();
