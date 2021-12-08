@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2021.10.30)  8 DEC 2021 17:28
+This is pdfTeX, Version 3.14159265-2.6-1.40.21 (TeX Live 2020/Debian) (preloaded format=pdflatex 2021.10.30)  8 DEC 2021 18:49
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -274,11 +274,7 @@ Package pdftex.def Info: ./grafica.png  used on input line 71.
 ) [4] [5 <./grafica.png (PNG copy)>] (./p3.aux
 LaTeX Info: Redefining \. on input line 4.
 LaTeX Info: Redefining \% on input line 4.
-)
-
-LaTeX Warning: Label(s) may have changed. Rerun to get cross-references right.
-
- ) 
+) ) 
 Here is how much of TeX's memory you used:
  5185 strings out of 481190
  70665 string characters out of 5913949
@@ -287,14 +283,14 @@ Here is how much of TeX's memory you used:
  407524 words of font info for 41 fonts, out of 8000000 for 9000
  40 hyphenation exceptions out of 8191
  68i,7n,74p,677b,1737s stack positions out of 5000i,500n,10000p,200000b,80000s
- </home/ivan/.texlive2020/texmf-var/fonts/pk/ljfour/jknappen/ec/tcti1000.600p
-k></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></u
-sr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/shar
-e/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texli
-ve/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/texm
-f-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dist
-/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
-Output written on p3.pdf (5 pages, 115835 bytes).
+ </home/ivan/.texlive2020/texmf-var/fonts/pk/ljfour/jknappen/ec/tcti1000.600
+pk></usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmitt10.pfb></
+usr/share/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/sha
+re/texlive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/share/texl
+ive/texmf-dist/fonts/type1/public/amsfonts/cm/cmr17.pfb></usr/share/texlive/tex
+mf-dist/fonts/type1/public/amsfonts/cm/cmti10.pfb></usr/share/texlive/texmf-dis
+t/fonts/type1/public/amsfonts/cm/cmtt8.pfb>
+Output written on p3.pdf (5 pages, 110251 bytes).
 PDF statistics:
  50 PDF objects out of 1000 (max. 8388607)
  34 compressed objects within 1 object stream
