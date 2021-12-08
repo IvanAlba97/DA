@@ -1,7 +1,8 @@
 
 /**
  * Pruebas de caja negra.
- * Para estas pruebas se he utilizado un vector de enteros, en vez de un vector de Cell.
+ * Para estas pruebas se he utilizado un vector de enteros, 
+ * en vez de un vector de Cell.
  */
 
 #include <vector>
