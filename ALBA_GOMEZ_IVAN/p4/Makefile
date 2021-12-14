@@ -38,6 +38,10 @@ savereplay: $(EXE)
 loadreplay: $(REPLAYFILE)
 	${VIEWER} -replay $(REPLAYFILE) $(VIEWERFLAGS)
 
+# Objetivo útil
+# Hay que crear previamente una carpeta llamada "paths"
+# Genera en esa carpeta los caminos gráficos de cada UCO
+# (Un UCO puede tener varios caminos porque a mitad de camino se destruyó una defensa)
 testpaths: $(EXE)
 	./$< -l $(LEVEL) -v -p paths
 
