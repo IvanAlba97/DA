@@ -48,5 +48,49 @@ void DEF_LIB_EXPORTED calculatePath(AStarNode* originNode, AStarNode* targetNode
                    , int cellsWidth, int cellsHeight, float mapWidth, float mapHeight
                    , float** additionalCost, std::list<Vector3> &path) {
     
+    // ALGORITMO A*
     
+    List<AStarNode*> opened, closed;
+    //std::pop_heap(opened.begin(), opened.end(), sort_node);
+    AStarNode* cur = originNode;
+    cur->G = 0;
+	cur->H = additionalCost[(int)(cur->position.y / cellsHeight)][(int)(cur->position.x / cellsWidth)];
+	cur->parent = NULL;
+	cur->F = cur->G + cur->H;
+    opened.push_back(cur);
+
+    bool found = false;
+    while(!false && !opened.empty()) {
+        cur = opened.back();
+        opened.pop_back();
+        closed.push_back(cur);
+        
+        if(cur == targetNode) {
+            found = true;
+        } else {
+            for(std::list<AStarNode*>::iterator j = cur->adjacents.begin(); j != cur->adjacents.end(); j++) {
+                if(std::find(closed.begin(), closed.end(), *j) == closed.end()) {
+                    if(std::find(opened.begin(), opened.end(), *j) == opened.end()) {
+                        (*j)->parent = cur;
+                        (*j)->G = cur->G + _distance(cur->position, (*j)->position);
+                        (*j)->H = additionalCost[(int)((*j)->position.y / cellsHeight)][(int)((*j)->position.x / cellsWidth)];
+                        (*j)->F = (*j)->G + (*j)->H;
+                        opened.push_back(*j);
+                    } else {
+                        float d = _distance(cur->position, (*j)->position);
+                        if((*j)->G > cur->G + d) {
+                            (*j)->parent = cur;
+							(*j)->G = cur->G + d;
+							(*j)->F = (*j)->G + (*j)->H;
+                            //std::make_heap(opened.begin(), opened.end());
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // Informarme sobre pop_heap() y make_heap()
+    // RECUPERACIÓN DEL CAMINO
+
+
 }
