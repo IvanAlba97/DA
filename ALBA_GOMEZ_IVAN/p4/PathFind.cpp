@@ -43,36 +43,10 @@ void DEF_LIB_EXPORTED calculateAdditionalCost(float** additionalCost
 }
 
 // Se llama cuando se crea el UCO y cuando algún UCO destruye alguna defensa
+// Esta función guarda en path el camino que va siguiendo el UCO
 void DEF_LIB_EXPORTED calculatePath(AStarNode* originNode, AStarNode* targetNode
                    , int cellsWidth, int cellsHeight, float mapWidth, float mapHeight
                    , float** additionalCost, std::list<Vector3> &path) {
     
-    // ELIMINAR TODA ESTA FUNCIÓN
-    int maxIter = 100;
-    AStarNode* current = originNode;
-    while(current != targetNode && maxIter > 0) { // @todo ensure current and target are connected
-	    float min = INF_F;
-	    AStarNode* o = NULL;    
-	    for (List<AStarNode*>::iterator it=current->adjacents.begin(); it != current->adjacents.end(); ++it) {
-		    float dist = _sdistance((*it)->position, targetNode->position);
-            if(additionalCost != NULL) { 
-                dist += additionalCost[(int)((*it)->position.y / cellsHeight)][(int)((*it)->position.x / cellsWidth)];
-            }
-		    //std::cout << (*it)->position.y << ", " << (*it)->position.x << std::endl;
-		    if(dist < min) {
-			    min = dist;
-			    o = (*it);
-		    }
-	    }
-
-	    current = o;
-
-        if(current == NULL) {
-            break;
-        }
-
-        path.push_back(current->position);
-        --maxIter;
-    }
-
+    
 }
