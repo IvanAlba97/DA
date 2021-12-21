@@ -19,6 +19,10 @@ Vector3 cellCenterToPosition(int i, int j, float cellWidth, float cellHeight){
     return Vector3((j * cellWidth) + cellWidth * 0.5f, (i * cellHeight) + cellHeight * 0.5f, 0); 
 }
 
+bool comp(AStarNode* n1, AStarNode* n2) {
+    return n1->F > n2->F;
+}
+
 // Se llama al principio del programa y cuando algún UCO destruye alguna defensa
 // Es lo último que hay que implementar
 // Esta función asigna un valor a una celda en función de si tiene defensas cerca o no
@@ -50,17 +54,18 @@ void DEF_LIB_EXPORTED calculatePath(AStarNode* originNode, AStarNode* targetNode
     
     // ALGORITMO A*
     
-    List<AStarNode*> opened, closed;
-    //std::pop_heap(opened.begin(), opened.end(), sort_node);
+    std::vector<AStarNode*> opened, closed;
+    std::make_heap(opened.begin(), opened.end());
     AStarNode* cur = originNode;
     cur->G = 0;
 	cur->H = additionalCost[(int)(cur->position.y / cellsHeight)][(int)(cur->position.x / cellsWidth)];
 	cur->parent = NULL;
 	cur->F = cur->G + cur->H;
     opened.push_back(cur);
-
+    std::push_heap(opened.begin(), opened.end(), comp);
     bool found = false;
     while(!false && !opened.empty()) {
+        std::pop_heap(opened.begin(), opened.end(), comp);
         cur = opened.back();
         opened.pop_back();
         closed.push_back(cur);
@@ -76,21 +81,27 @@ void DEF_LIB_EXPORTED calculatePath(AStarNode* originNode, AStarNode* targetNode
                         (*j)->H = additionalCost[(int)((*j)->position.y / cellsHeight)][(int)((*j)->position.x / cellsWidth)];
                         (*j)->F = (*j)->G + (*j)->H;
                         opened.push_back(*j);
+                        std::push_heap(opened.begin(), opened.end(), comp);
                     } else {
                         float d = _distance(cur->position, (*j)->position);
                         if((*j)->G > cur->G + d) {
                             (*j)->parent = cur;
 							(*j)->G = cur->G + d;
 							(*j)->F = (*j)->G + (*j)->H;
-                            //std::make_heap(opened.begin(), opened.end());
+                            std::make_heap(opened.begin(), opened.end());
                         }
                     }
                 }
             }
         }
     }
-    // Informarme sobre pop_heap() y make_heap()
+
     // RECUPERACIÓN DEL CAMINO
 
-
+    cur = targetNode;
+    path.push_front(targetNode->position);
+    while(cur->parent != originNode && cur->parent != nullptr) {
+        cur = cur->parent;
+        path.push_front(cur->position);
+    }
 }
