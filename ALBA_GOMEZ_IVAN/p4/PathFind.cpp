@@ -33,7 +33,34 @@ void DEF_LIB_EXPORTED calculateAdditionalCost(float** additionalCost
     float cellWidth = mapWidth / cellsWidth;
     float cellHeight = mapHeight / cellsHeight;
 
-    for(int i = 0 ; i < cellsHeight ; ++i) {
+    List<Defense*>::iterator itDefense = defenses.begin();
+    List<Object*>::iterator itObstacle = obstacles.begin();
+
+    for(int i = 0; i < cellWidth; i++) {
+        for(int j = 0; j < cellHeight; j++) {
+            Vector3 cellPosition = cellCenterToPosition(i, j, cellWidth, cellHeight);
+            float cost = 1000;
+            while(itDefense != defenses.end()) {
+                if(_distance(cellPosition, (*itDefense)->position) < 10) {
+                    cost *= 2;
+                } else {
+                    cost /= 2;
+                }
+                itDefense++;
+            }
+            while(itObstacle != obstacles.end()) {
+                if(_distance(cellPosition, (*itObstacle)->position) < 10) {
+                    cost *= 2;
+                } else {
+                    cost /= 2;
+                }
+                itObstacle++;
+            }
+            additionalCost[i][j] = cost;
+        }
+    }
+
+    /* for(int i = 0 ; i < cellsHeight ; ++i) {
         for(int j = 0 ; j < cellsWidth ; ++j) {
             Vector3 cellPosition = cellCenterToPosition(i, j, cellWidth, cellHeight);
             float cost = 0;
@@ -43,7 +70,7 @@ void DEF_LIB_EXPORTED calculateAdditionalCost(float** additionalCost
             
             additionalCost[i][j] = cost;
         }
-    }
+    } */
 }
 
 // Se llama cuando se crea el UCO y cuando algún UCO destruye alguna defensa
