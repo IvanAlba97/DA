@@ -24,7 +24,6 @@ bool comp(AStarNode* n1, AStarNode* n2) {
 }
 
 // Se llama al principio del programa y cuando algún UCO destruye alguna defensa
-// Es lo último que hay que implementar
 // Esta función asigna un valor a una celda en función de si tiene defensas cerca o no
 void DEF_LIB_EXPORTED calculateAdditionalCost(float** additionalCost
                    , int cellsWidth, int cellsHeight, float mapWidth, float mapHeight
@@ -59,18 +58,6 @@ void DEF_LIB_EXPORTED calculateAdditionalCost(float** additionalCost
             additionalCost[i][j] = cost;
         }
     }
-
-    /* for(int i = 0 ; i < cellsHeight ; ++i) {
-        for(int j = 0 ; j < cellsWidth ; ++j) {
-            Vector3 cellPosition = cellCenterToPosition(i, j, cellWidth, cellHeight);
-            float cost = 0;
-            if( (i+j) % 2 == 0 ) {
-                cost = cellWidth * 100;
-            }
-            
-            additionalCost[i][j] = cost;
-        }
-    } */
 }
 
 // Se llama cuando se crea el UCO y cuando algún UCO destruye alguna defensa
