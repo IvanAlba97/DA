@@ -32,7 +32,7 @@ void DEF_LIB_EXPORTED calculateAdditionalCost(float** additionalCost
     float cellWidth = mapWidth / cellsWidth;
     float cellHeight = mapHeight / cellsHeight;
 
-    List<Defense*>::iterator itDefense = defenses.begin();
+    List<Defense*>::iterator itDefense = defenses.begin(); itDefense++;
     List<Object*>::iterator itObstacle = obstacles.begin();
 
     for(int i = 0; i < cellWidth; i++) {
@@ -83,7 +83,6 @@ void DEF_LIB_EXPORTED calculatePath(AStarNode* originNode, AStarNode* targetNode
         cur = opened.back();
         opened.pop_back();
         closed.push_back(cur);
-        
         if(cur == targetNode) {
             found = true;
         } else {
@@ -119,3 +118,10 @@ void DEF_LIB_EXPORTED calculatePath(AStarNode* originNode, AStarNode* targetNode
         path.push_front(cur->position);
     }
 }
+
+
+/**
+ * Para uso de montículos me he inspirado de las siguentes páginas web:
+ * https://en.cppreference.com/w/cpp/algorithm
+ * https://www.geeksforgeeks.org/heap-using-stl-c/
+ */

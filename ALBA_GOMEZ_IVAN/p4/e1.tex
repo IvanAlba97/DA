@@ -1,1 +1,11 @@
-Escriba aquí su respuesta al ejercicio 1.
+Para el cálculo de caminos mínimos hemos usado el algoritmo A*, el cual es un camino heurístico, ya que una de sus principales características es que hace uso de una función de evaluación heurística mediante la cual etiqueta los diferentes nodos de la red y servirá para determinar la probabilidad de dichosnodos de pertenecer al camino óptimo.
+Mi implementación consta de las siguientes estructuras:
+\begin{itemize}
+\item cur: Puntero a AStarNode que apunta al nodo que estamos procesando.
+\item G[i]: Distancia del camino más corto entre el origen y el nodo i.
+\item H[i]: Distancia estimada del cmino más corto entre el nodo i y el destino.
+\item F[i]: G[i] + H[i]
+\item closed: Vector de nodos procesados.
+\item opened: Vector de nodos pendientes.
+\item additionalCost: Matriz dinámica de tipo float que almacena el coste adicional de cada celda.
+\end{itemize}
